@@ -1,7 +1,9 @@
 package model.aplicattion;
 
 import model.entities.Contract;
+import model.entities.Installment;
 import model.services.ContractService;
+import model.services.PaypalService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,18 +21,24 @@ public class Main {
         System.out.println("Enter the contract details:");
         System.out.print("Number contract: ");
         int number = sc.nextInt();
+        sc.nextLine();
         System.out.print("Data contract (dd/MM/yyyy): ");
         LocalDate date = LocalDate.parse(sc.nextLine(), dtf);
-        System.out.print("Contract value:");
+        System.out.print("Contract value: ");
         Double value = sc.nextDouble();
 
         Contract obj = new Contract(number, date, value);
 
         System.out.print("Number of installments in the contract: ");
-        int months = sc.nextInt();
-        ContractService contractService = new ContractService(obj, months);
+        int n = sc.nextInt();
+        ContractService contractService = new ContractService(new PaypalService());
 
-
+        contractService.processContract(obj, n);
+        System.out.println();
+        System.out.println("Installments: ");
+        for(Installment installment : obj.getInstallmentList()){
+            System.out.println(installment);
+        }
         sc.close();
     }
 }
